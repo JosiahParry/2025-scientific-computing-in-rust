@@ -12,16 +12,25 @@ include-in-header:
     </style>
 ---
 
+# Arrow, Rust, and cross-language tooling
+
+Josiah Parry, Esri
+
+Robin Lovelace (University of Leeds, ITS)
+
+
 # Hey 👋🏼
 
 -   I'm Josiah Parry
 -   Sr. Product Engineer \@ Esri
 -   R developer
--   Contributor to extendR
+-   Maintainer of extendR
 
 . . .
 
 ![](images/feRris.png){.absolute right="50" top="0" width="300px"}
+
+## Co
 
 # Speedrun Agenda
 
@@ -58,7 +67,7 @@ include-in-header:
 -   Easy(ish) to pick up
 -   No dependencies
 -   Stupid fast 🏎️💨
--   Easy parellelization \#`rayon`
+-   Easy parallelization \#`rayon`
 -   Cross-platform 💻
 
 # Rust FFI
@@ -128,6 +137,14 @@ TL;DR on what it is and why you should care
 # ANIME
 
 Approximate Network Integration, Matching, and Enrichment
+
+## ANIME
+
+- Developed with Dr. Robin Lovelace
+- Road network matching is tough...
+- ANIME recognizes that it will never be perfect
+- **Partial** matching of lines
+
 
 ## ANIME
 
