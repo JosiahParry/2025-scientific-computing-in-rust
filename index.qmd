@@ -1,0 +1,240 @@
+---
+title: "Arrow, Rust, and cross-language data science tooling"
+format: 
+  revealjs:
+    incremental: true
+include-in-header: 
+  text: |
+    <style>
+      .custom-small table {
+        font-size: .75em
+      }
+    </style>
+---
+
+# Hey 👋🏼
+
+-   I'm Josiah Parry
+-   Sr. Product Engineer \@ Esri
+-   R developer
+-   Contributor to extendR
+
+. . .
+
+![](images/feRris.png){.absolute right="50" top="0" width="300px"}
+
+# Speedrun Agenda
+
+-   The status quo
+-   Rust and FFI
+-   Apache Arrow
+-   Why a Rust core
+-   Example: ANIME
+
+# Tight Coupling
+
+## Tight Coupling
+
+::::: columns
+::: column
+![](images/rdatatable.png)
+:::
+
+::: column
+![](images/numpy.svg)
+:::
+:::::
+
+# Loose Coupling
+
+-   common "core" libraries
+
+## Loose Coupling
+
+![Pebesma, et al. 2025](images/sdsl.png)
+
+## Why Rust?
+
+-   Easy(ish) to pick up
+-   No dependencies
+-   Stupid fast 🏎️💨
+-   Easy parellelization \#`rayon`
+-   Cross-platform 💻
+
+# Rust FFI
+
+-   `std::ffi` provides FFI utilites for C-like types
+-   R, Python, and Julia all have C APIs
+
+## extendr
+
+![extendr](images/feRris.png)
+
+## PyO3
+
+![PyO3](images/pyo3.png)
+
+## jlrs
+
+![jlrs](images/jlrs.png)
+
+## Using a Rust Core
+
+![](images/paste-6.png)
+
+# Apache Arrow
+
+TL;DR on what it is and why you should care
+
+## Tabular Data
+
+![](images/paste-9.png)
+
+## Columnar vs. Row-Oriented
+
+![](images/paste-13.png)
+
+## Implementations
+
+::: {layout-ncol="3"}
+### R
+
+-   [nanoarrow](https://arrow.apache.org/nanoarrow/latest/getting-started/r.html#)
+-   [arrow](https://arrow.apache.org/docs/r/)
+
+### Python
+
+-   [nanoarrow](https://arrow.apache.org/nanoarrow/latest/getting-started/python.html)
+-   [pyarrow](https://arrow.apache.org/docs/python/index.html)
+-   [arro3](https://kylebarron.dev/arro3/latest/)
+
+### Julia
+
+-   [Arrow.jl](https://arrow.apache.org/julia/stable/)
+:::
+
+## Status Quo
+
+![](images/paste-7.png)
+
+## With Apache Arrow
+
+![](images/paste-8.png)
+
+## Arrow for FFI Input & Output
+
+![](images/paste-4.png)
+
+# ANIME
+
+Approximate Network Integration, Matching, and Enrichment
+
+## ANIME
+
+![](images/paste-16.png)
+
+## Repo Structure
+
+```         
+.
+├── rust/
+│   └── Cargo.toml
+├── r/
+│   └── src/rust/Cargo.toml
+└── py/
+    └── Cargo.toml
+```
+
+
+## R Bindings
+
+``` r
+library(sf)
+library(anime)
+
+targets <- read_sf("maine-osm-targets.fgb")
+sources <- read_sf("maine-tigris-sources.fgb")
+
+matches <- anime(
+    source = sources,
+    targets = targets,
+    distance_tolerance = 10, 
+    angle_tolerance = 5
+)
+```
+
+## Python Bindings
+
+``` python
+from anime import PyAnime
+from geoarrow.rust.io import read_flatgeobuf
+
+target = read_flatgeobuf("maine-osm-targets.fgb")
+sources = read_flatgeobuf("maine-tigris-sources.fgb")
+
+anime = PyAnime(
+  source = sources.column("").chunk(0), 
+  target = target.column("").chunk(0), 
+  distance_tolerance = 10, 
+  angle_tolerance = 5
+)
+```
+
+## Identical Results
+
+::: panel-tabset
+## R
+
+![](images/paste-19.png)
+
+## Python
+
+![](images/paste-17.png)
+:::
+
+## Arrow FFI Helpers
+
+::::: columns
+::: column
+![](images/paste-14.png)
+:::
+
+::: column
+![](images/paste-15.png)
+:::
+:::::
+
+
+## A peek under the hood
+
+::: panel-tabset
+## R 
+
+```toml
+[dependencies]
+arrow = "53.0.0"
+geoarrow = "0.4.0-beta.3"
+extendr-api = "0.8.""
+arrow_extendr = "53.0.0"
+itertools = "0.12.0"
+anime = {git = "https://github.com/josiahparry/anime"}
+```
+
+## Python
+```toml
+[dependencies]
+arrow = { version = "54.2.1", default-features = false }
+geoarrow = { version = "0.4.0-beta.4" }
+pyo3 = { version = "0.24.1", features = ["extension-module"] }
+pyo3-arrow = "0.8.0"
+anime = { path = "../rust" }
+```
+
+:::
+
+# TL;DR
+
+- Write core in Rust 
+- Use Apache Arrow for FFI boundary
+
+# Thanks 🖤
