@@ -30,7 +30,6 @@ Robin Lovelace (University of Leeds, ITS)
 
 ![](images/feRris.png){.absolute right="50" top="0" width="300px"}
 
-## Co
 
 # Speedrun Agenda
 
